@@ -20,6 +20,8 @@
     "jsx": "preserve"
   },
   "include": [
-    "src"
-  ]
+    "./src/**/*",
+    "types/**.d.ts"
+  ],
+  "extends": "./tsconfig-path.json"
 }

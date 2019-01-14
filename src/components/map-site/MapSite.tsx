@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { TrafficMap } from 'components/traffic-map';
 
-class App extends Component {
+export class MapSite extends React.Component {
   render() {
     return <TrafficMap />;
   }
 }
-
-export default App;
