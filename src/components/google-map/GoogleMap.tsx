@@ -11,27 +11,31 @@ const mapDefaultCenter = {
   lng: parseFloat(process.env.REACT_APP_MAP_DEFAULT_CENTER_LNG as string)
 };
 
+const mapDefaultZoom = 14;
+
 interface IGoogleMapProps {
   center?: {
     lat: number;
     lng: number;
   };
-  zoom: number;
+  zoom?: number;
   onApiLoaded: ({ map, maps }: { map: any; maps: any }) => void;
+  onChange: (mapData: any) => void;
 }
 
 export const GoogleMap: React.FunctionComponent<IGoogleMapProps> = ({
-  center,
   zoom,
   onApiLoaded,
+  onChange,
   children
 }) => (
   <GoogleMapReact
-    center={center}
     bootstrapURLKeys={googleMapConfiguration}
     defaultCenter={mapDefaultCenter}
-    defaultZoom={zoom}
+    defaultZoom={mapDefaultZoom}
+    zoom={zoom}
     onGoogleApiLoaded={onApiLoaded}
+    onChange={onChange}
     yesIWantToUseGoogleMapApiInternals
   >
     {children}

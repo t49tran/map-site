@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TrafficMap } from 'components/traffic-map';
-import { IncidentStore } from 'src/stores/IncidentStore';
+import { IncidentStore, IIncident } from 'src/stores/IncidentStore';
 import { inject } from 'mobx-react';
 import { IStores } from 'stores';
 import Drawer from '@material-ui/core/Drawer';
@@ -9,7 +9,10 @@ import { incidentDrawerClasses, DrawerPaperClass } from './MapSite.emotion';
 
 type IMapSiteInjectedProps = Pick<
   IncidentStore,
-  'getIncidents' | 'incidentList'
+  | 'getIncidents'
+  | 'incidentList'
+  | 'setIncidentsDisplayingOnMap'
+  | 'incidentsDisplayingOnMapList'
 >;
 
 class MapSite extends React.Component {
@@ -23,24 +26,44 @@ class MapSite extends React.Component {
     getIncidents();
   }
 
+  mapChangeHandler = (incidents: IIncident[]) => {
+    const { setIncidentsDisplayingOnMap } = this.injectedProps;
+
+    setIncidentsDisplayingOnMap(incidents);
+  };
+
   render() {
-    const { incidentList } = this.injectedProps;
+    const { incidentList, incidentsDisplayingOnMapList } = this.injectedProps;
 
     return (
       <React.Fragment>
         <Drawer classes={incidentDrawerClasses} variant="permanent">
-          {incidentList && <IncidentList incidents={incidentList} />}
+          {incidentsDisplayingOnMapList && (
+            <IncidentList incidents={incidentsDisplayingOnMapList} />
+          )}
         </Drawer>
-        <TrafficMap incidents={incidentList} />
+        <TrafficMap
+          onMapChange={this.mapChangeHandler}
+          incidents={incidentList}
+        />
       </React.Fragment>
     );
   }
 }
 
 const EnhancedMapSite = inject(
-  ({ incidentStore: { getIncidents, incidentList } }: IStores) => ({
+  ({
+    incidentStore: {
+      getIncidents,
+      incidentList,
+      incidentsDisplayingOnMapList,
+      setIncidentsDisplayingOnMap
+    }
+  }: IStores) => ({
     getIncidents,
-    incidentList
+    incidentList,
+    setIncidentsDisplayingOnMap,
+    incidentsDisplayingOnMapList
   })
 )(MapSite);
 

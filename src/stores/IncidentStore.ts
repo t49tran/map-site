@@ -4,18 +4,22 @@ import { getIncidents } from 'services/TrafficService';
 export interface IIncident {
   id: string;
   alert_type: string;
-  lat: number;
-  long: number;
+  lat: string;
+  long: string;
   title: string;
   description: string;
 }
 
 export interface IIncidentStoreState {
   incidents?: IIncident[];
+  incidentsDisplayingOnMap?: IIncident[];
 }
 
 export class IncidentStore {
-  state = observable<IIncidentStoreState>({ incidents: [] });
+  state = observable<IIncidentStoreState>({
+    incidents: [],
+    incidentsDisplayingOnMap: []
+  });
 
   @action.bound
   async getIncidents() {
@@ -26,10 +30,24 @@ export class IncidentStore {
     });
   }
 
+  @action.bound
+  setIncidentsDisplayingOnMap(incidents: IIncident[]) {
+    this.state.incidentsDisplayingOnMap = incidents;
+  }
+
   @computed
   get incidentList() {
     const { incidents } = this.state;
 
     return incidents ? Array.from(incidents.values()) : [];
+  }
+
+  @computed
+  get incidentsDisplayingOnMapList() {
+    const { incidentsDisplayingOnMap } = this.state;
+
+    return incidentsDisplayingOnMap
+      ? Array.from(incidentsDisplayingOnMap.values())
+      : [];
   }
 }
