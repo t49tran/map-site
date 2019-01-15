@@ -1,6 +1,7 @@
 {
   "name": "map-site",
   "version": "0.1.0",
+  "author": "Duong Tran",
   "private": true,
   "dependencies": {
     "@material-ui/core": "3.8.3",
