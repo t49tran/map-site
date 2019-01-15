@@ -7,6 +7,7 @@ import { TrafficMapWrapper } from './TrafficMap.emotion';
 interface ITrafficMapProps {
   incidents: IIncident[];
   onMapChange: (incidents: IIncident[]) => void;
+  isListOpened: boolean;
 }
 
 export class TrafficMap extends React.Component<ITrafficMapProps> {
@@ -55,12 +56,12 @@ export class TrafficMap extends React.Component<ITrafficMapProps> {
   };
 
   render() {
-    const { incidents } = this.props;
+    const { incidents, isListOpened } = this.props;
 
     return (
       incidents &&
       incidents.length > 0 && (
-        <TrafficMapWrapper>
+        <TrafficMapWrapper isListOpened={isListOpened}>
           <GoogleMap
             onChange={this.onChangeHandler}
             onApiLoaded={this.apiLoadedHandler}

@@ -5,7 +5,13 @@ import { inject } from 'mobx-react';
 import { IStores } from 'stores';
 import Drawer from '@material-ui/core/Drawer';
 import { IncidentList } from 'components/incident-list/IncidentList';
-import { incidentDrawerClasses, DrawerPaperClass } from './MapSite.emotion';
+import {
+  incidentDrawerClasses,
+  IncidentListButton,
+  IncidentListBackButton
+} from './MapSite.emotion';
+import CloseIcon from '@material-ui/icons/Close';
+import Button from '@material-ui/core/Button';
 
 type IMapSiteInjectedProps = Pick<
   IncidentStore,
@@ -15,7 +21,15 @@ type IMapSiteInjectedProps = Pick<
   | 'incidentsDisplayingOnMapList'
 >;
 
-class MapSite extends React.Component {
+interface IMapSiteState {
+  isListOpened: boolean;
+}
+
+class MapSite extends React.Component<object, IMapSiteState> {
+  state = {
+    isListOpened: false
+  };
+
   get injectedProps() {
     return this.props as IMapSiteInjectedProps;
   }
@@ -32,20 +46,52 @@ class MapSite extends React.Component {
     setIncidentsDisplayingOnMap(incidents);
   };
 
+  incidentListButtonClickHandler = () => {
+    this.setState({
+      isListOpened: true
+    });
+  };
+
+  incidentListBackButtonClickHandler = () => {
+    this.setState({
+      isListOpened: false
+    });
+  };
+
   render() {
     const { incidentList, incidentsDisplayingOnMapList } = this.injectedProps;
+    const { isListOpened } = this.state;
 
     return (
       <React.Fragment>
-        <Drawer classes={incidentDrawerClasses} variant="permanent">
+        <Drawer
+          classes={incidentDrawerClasses(isListOpened)}
+          variant="permanent"
+        >
+          {isListOpened && (
+            <IncidentListBackButton
+              onClick={this.incidentListBackButtonClickHandler}
+              color="primary"
+            >
+              <CloseIcon />
+            </IncidentListBackButton>
+          )}
           {incidentsDisplayingOnMapList && (
             <IncidentList incidents={incidentsDisplayingOnMapList} />
           )}
         </Drawer>
         <TrafficMap
+          isListOpened={isListOpened}
           onMapChange={this.mapChangeHandler}
           incidents={incidentList}
         />
+        <IncidentListButton
+          onClick={this.incidentListButtonClickHandler}
+          variant="contained"
+          color="primary"
+        >
+          Incidents {incidentsDisplayingOnMapList.length}
+        </IncidentListButton>
       </React.Fragment>
     );
   }
