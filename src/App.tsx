@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
-import { TrafficMap } from 'components/traffic-map';
+import { MapSite } from 'components/map-site';
+import { Provider } from 'mobx-react';
+import { stores } from 'stores';
 
 class App extends Component {
   render() {
-    return <TrafficMap />;
+    return (
+      <Provider {...stores}>
+        <MapSite />
+      </Provider>
+    );
   }
 }
 

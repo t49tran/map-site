@@ -1,25 +1,39 @@
+import * as React from 'react';
 import GoogleMapReact from 'google-map-react';
 
 const googleMapConfiguration = {
-  key: process.env.GOOGLE_MAPS_API_KEY,
+  key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   libraries: 'places,drawing'
 };
 
+const mapDefaultCenter = {
+  lat: parseFloat(process.env.REACT_APP_MAP_DEFAULT_CENTER_LAT as string),
+  lng: parseFloat(process.env.REACT_APP_MAP_DEFAULT_CENTER_LNG as string)
+};
+
 interface IGoogleMapProps {
-  center: {
+  center?: {
     lat: number;
     lng: number;
   };
   zoom: number;
+  onApiLoaded: ({ map, maps }: { map: any; maps: any }) => void;
 }
 
 export const GoogleMap: React.FunctionComponent<IGoogleMapProps> = ({
-  center: { lat, lng },
-  zoom
+  center,
+  zoom,
+  onApiLoaded,
+  children
 }) => (
   <GoogleMapReact
+    center={center}
     bootstrapURLKeys={googleMapConfiguration}
-    center={{ lat, lng }}
-    zoom={zoom}
-  />
+    defaultCenter={mapDefaultCenter}
+    defaultZoom={zoom}
+    onGoogleApiLoaded={onApiLoaded}
+    yesIWantToUseGoogleMapApiInternals
+  >
+    {children}
+  </GoogleMapReact>
 );
